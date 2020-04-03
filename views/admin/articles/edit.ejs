@@ -1,0 +1,43 @@
+<%- include("../../partials/header.ejs") %>
+<%- include("../../partials/navbar.ejs") %>
+<div class="container">
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <h2>Editar Artigo</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/articles/update">
+                <input class="form-control" type="text" name="title" placeholder="Defina o título do artigo" value="<%= article.title %>"><br>
+                <textarea class="form-control" placeholder="Escreva o artigo aqui" name="body" id="article"><%- article.body %></textarea><br>
+                <input type="hidden" name="id" value="<%= article.id %>">
+                <label>Categoria</label>
+                <select name="category" class="form-control">
+                    <% categories.forEach((category) => { %>
+                        <% if(category.id == article.categoryId){ %>
+                            <option selected value="<%= category.id %>"><%= category.title %></option>
+                        <% }else{ %>
+                            <option value="<%= category.id %>"><%= category.title %></option>
+                        <% } %>    
+                    <% }) %>
+                </select><br>
+                <button class="btn btn-success">Atualizar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<%- include("../../partials/footer.ejs") %>
+<!--tinymce é uma ferramenta que adiciona super-poderes a um campo de texto-->
+<script src="/tinymce/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        language:'pt_BR',
+        selector: "#article", //informar o id do elemento que desejamos adicionar superpoderes
+        plugins: [ //array para adicionar plugins
+            'advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons'
+        ]
+        //de crição de listas, link azul, de link com botão, de imagem, de impressão, preview de escrita, de linha
+        //pra pesquisar, qtd de palavras, abrir editor em tela cheia, inserir data do texto, inserir mídias da web,
+        //salvar artigo como arquivo no computador, criar tabelas, colar coisas, colocar emojis
+    })
+</script>
