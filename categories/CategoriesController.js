@@ -2,14 +2,15 @@ const express = require("express")
 const router = express.Router() //criando uma rota
 const Category = require("./Category")
 const slugify = require("slugify") //npm install --save slugify
+const adminAuth = require("../middlewares/adminAuth") //requisição ao middleware de autenticação
 
 //Exibir tela de nova categoria
-router.get("/admin/categories/new", (req, res) => {
+router.get("/admin/categories/new", adminAuth, (req, res) => {
     res.render("admin/categories/new")
 })
 
 //C - Criar nova Categoria
-router.post("/categories/save", (req, res) => { //post = recomentdado para trabalhar com formulários
+router.post("/categories/save", adminAuth, (req, res) => { //post = recomentdado para trabalhar com formulários
     var title = req.body.title
     if(title != undefined){ //se o título não for nulo
         Category.create({
@@ -26,14 +27,14 @@ router.post("/categories/save", (req, res) => { //post = recomentdado para traba
 })
 
 //R - Listar Categorias
-router.get("/admin/categories", (req, res) =>{
+router.get("/admin/categories", adminAuth, (req, res) =>{
     Category.findAll().then(categories => {
         res.render("admin/categories/index", {categories: categories})
     })
 })
 
 //D - Deletar Categoria
-router.post("/categories/delete", (req, res) => {
+router.post("/categories/delete", adminAuth, (req, res) => {
     var id = req.body.id
     if(id != undefined){ //se o id não é nulo
         if(!isNaN(id)){ //se o id for um número / NaN = Not a Number
@@ -53,7 +54,7 @@ router.post("/categories/delete", (req, res) => {
 })
 
 // Exibir tela de edição de categoria
-router.get("/admin/categories/edit/:id", (req, res) => {
+router.get("/admin/categories/edit/:id", adminAuth, (req, res) => {
     var id = req.params.id
     if(isNaN(id)){
         res.render("admin/categories")
@@ -70,7 +71,7 @@ router.get("/admin/categories/edit/:id", (req, res) => {
 })
 
 // U - Atualizar Categoria
-router.post("/categories/update", (req, res) => {
+router.post("/categories/update", adminAuth, (req, res) => {
     var id = req.body.id
     var title = req.body.title
 

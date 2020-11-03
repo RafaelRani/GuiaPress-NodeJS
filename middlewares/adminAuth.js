@@ -6,7 +6,7 @@ function adminAuth(req, res, next){
     if(req.session.user != undefined){ //se o usuário está logado
         next()
     }else{ //se não está logado
-        res.redirect("/login") //redireciona para a home page
+        res.redirect("/login") //redireciona para a página de loguin
     }
 }
 

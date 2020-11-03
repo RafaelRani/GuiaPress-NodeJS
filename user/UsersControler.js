@@ -2,21 +2,22 @@ const express = require("express")
 const router = express.Router()
 const User = require("./User")
 const bcrypt = require("bcryptjs")
+const adminAuth = require("../middlewares/adminAuth") //requisição ao middleware de autenticação
 
 //listar usuários cadastrados
-router.get("/admin/users", (req, res) =>{
+router.get("/admin/users", adminAuth, (req, res) =>{
     User.findAll().then(users =>{
         res.render("admin/users/index", {users: users})
     })
 })
 
 //carregar a página de registro de usuário
-router.get("/admin/users/create", (req, res) =>{
+router.get("/admin/users/create", adminAuth, (req, res) =>{
     res.render("admin/users/create")
 })
 
 //C - Salvar usuário
-router.post("/users/create", (req, res) =>{
+router.post("/users/create", adminAuth, (req, res) =>{
     var email = req.body.email
     var password = req.body.password
 
@@ -29,9 +30,9 @@ router.post("/users/create", (req, res) =>{
                 email: email,
                 password: hash
             }).then(() => {
-                res.redirect("/")
+                res.redirect("/admin/users")
             }).catch((erro) =>{
-                res.redirect("/")
+                res.redirect("/admin/users/create")
             })
         }else{ //se encontrar retorna
             res.redirect("/admin/users/create")
@@ -54,7 +55,7 @@ router.post("/authenticate", (req, res) =>{
             //validar senha
             var correct = bcrypt.compareSync(password, user.password)
             if(correct){
-                req.session.user = {
+                req.session.user = { //req.session.user já vem implementado no express para guardar sessões de usuário
                     id: user.id,
                     email: user.email
                 }

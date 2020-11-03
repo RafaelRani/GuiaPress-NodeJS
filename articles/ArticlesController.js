@@ -8,6 +8,9 @@ const adminAuth = require("../middlewares/adminAuth") //requisição ao middlewa
 //R- mostrar os artigos
 router.get("/admin/articles", adminAuth, (req, res) => { //chama o middleware de autenticação
     Article.findAll({
+        order:[
+            ['id', 'DESC']
+        ],
         include: [{model: Category}] //puxar os dados da categoria do artigo, através do relacionamento
     }).then(articles => {
         res.render("admin/articles/index", {articles: articles})
@@ -100,9 +103,9 @@ router.post("/articles/update", adminAuth, (req, res) => {
 paginação:
 exibir o conteúdo dos artigos em formato json:
 irá exibir 4 artigos por página:
-página 1 = 0 ao 3
-página 2 = 4 ao 7
-página 3 = 8 ao 11
+página 1 = 0 ao 3 (o offset será 0)
+página 2 = 4 ao 7 (o offset será 4)
+página 3 = 8 ao 11 (o offset será 8)
 página 4 = 12 ao 15
 página 5 = 16 ao 19
 */
@@ -114,7 +117,7 @@ router.get("/articles/page/:num", (req, res) => {
     }else{
         offset = (parseInt(page) - 1) * 4
     }
-    Article.findAndCountAll({
+    Article.findAndCountAll({ //retornar e contar todos
         limit: 4, //mostra apenas os 4 primeiros registros
         offset: offset, //mostra a partir do número do registro contido na var offset
         order:[

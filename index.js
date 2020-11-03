@@ -1,8 +1,8 @@
 const express = require("express")
-const app = express();
+const app = express()
 const bodyParser = require("body-parser")
 const session = require("express-session") //incluir biblioteca de sessão
-const connection = require("./database/database");
+const connection = require("./database/database")
 
 //importando arquivo CategoriesController.js da pasta categories
 const categoriesController = require("./categories/CategoriesController")
@@ -16,7 +16,7 @@ const Category = require("./categories/Category")
 const User = require("./user/User")
 
 // View engine
-app.set('view engine','ejs');
+app.set('view engine','ejs')
 
 // Session
 app.use(session({
